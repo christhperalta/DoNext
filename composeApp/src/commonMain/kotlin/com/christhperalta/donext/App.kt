@@ -1,29 +1,48 @@
 package com.christhperalta.donext
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.christhperalta.donext.features.home.presentation.main.MainScreen
-import org.jetbrains.compose.resources.painterResource
 
-import donext.composeapp.generated.resources.Res
-import donext.composeapp.generated.resources.compose_multiplatform
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+
+
+sealed interface Screen : NavKey {
+
+
+   @Serializable object Home : Screen
+    @Serializable object List : Screen
+    @Serializable object Stats : Screen
+    @Serializable object Profile : Screen
+}
+
+private  val config = SavedStateConfiguration {
+    serializersModule = SerializersModule {
+        polymorphic(NavKey::class) {
+            subclass(Screen.Home::class, Screen.Home.serializer())
+            subclass(Screen.List::class, Screen.List.serializer())
+            subclass(Screen.Stats::class, Screen.Stats.serializer())
+            subclass(Screen.Profile::class, Screen.Profile.serializer())
+
+        }
+    }
+}
+
+
 
 @Composable
 @Preview
 fun App() {
+
+    val backStack = rememberNavBackStack(config , Screen.List)
+
     MaterialTheme {
-        MainScreen()
+        MainScreen(backStack)
     }
 }
