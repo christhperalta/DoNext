@@ -51,6 +51,8 @@ kotlin {
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.jetbrains.material3.adaptiveNavigation3)
             implementation(libs.jetbrains.lifecycle.viewmodelNavigation3)
+            implementation(libs.vico.compose)
+            implementation(libs.vico.compose.m3)
         }
         commonTest.dependencies {
             implementation(libs.kotlinx.serialization.json)
