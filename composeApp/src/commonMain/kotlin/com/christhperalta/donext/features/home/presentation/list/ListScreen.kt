@@ -4,6 +4,7 @@ package com.christhperalta.donext.features.home.presentation.list
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,10 +35,12 @@ import com.example.clickpos.core.ui.CustomText
 fun ListScreen() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = { ListTopBar() },
         floatingActionButton = {
             CustomFloatingActionButton()
-        }
+        },
+
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding).padding(horizontal = 16.dp)) {
             Spacer(modifier = Modifier.height(25.dp))
@@ -109,7 +112,7 @@ fun ListItem(
 
             Column(modifier = Modifier.align(alignment = Alignment.BottomStart)) {
                 CustomText(
-                    text = "Item",
+                    text = "Personal",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
