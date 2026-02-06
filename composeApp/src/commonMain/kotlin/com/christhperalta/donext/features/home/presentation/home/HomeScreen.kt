@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -71,7 +72,7 @@ fun HomeScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             HomeTopBar(userName = "Christh")
         },
@@ -110,7 +111,7 @@ fun HomeScreen(
 
 @Composable
 private fun HeaderSection(userName: String, taskCount: Int) {
-    Column(modifier = Modifier.padding(top = 16.dp)) {
+    Column(modifier = Modifier.padding(top = 30.dp)) {
         Text(
             text = "Hello, $userName.",
             style = MaterialTheme.typography.headlineLarge,
