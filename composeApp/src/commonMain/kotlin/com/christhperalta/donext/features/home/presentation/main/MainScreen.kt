@@ -34,6 +34,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.christhperalta.donext.Screen
 import com.christhperalta.donext.features.home.presentation.home.HomeScreen
 import com.christhperalta.donext.features.home.presentation.list.ListScreen
+import com.christhperalta.donext.features.home.presentation.stats.StatsScreen
 
 
 enum class MainDestination(
@@ -97,9 +98,7 @@ fun MainScreen(
                     ListScreen()
                 }
                 entry<Screen.Stats> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = "Stats")
-                    }
+                    StatsScreen()
                 }
                 entry<Screen.Profile> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

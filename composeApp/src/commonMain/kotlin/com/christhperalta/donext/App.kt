@@ -40,7 +40,7 @@ private  val config = SavedStateConfiguration {
 @Preview
 fun App() {
 
-    val backStack = rememberNavBackStack(config , Screen.List)
+    val backStack = rememberNavBackStack(config , Screen.Home)
 
     MaterialTheme {
         MainScreen(backStack)
