@@ -32,13 +32,13 @@ import com.christhperalta.donext.core.presentation.CustomFloatingActionButton
 import com.example.clickpos.core.ui.CustomText
 
 @Composable
-fun ListScreen() {
+fun ListScreen( onNavigateToNewTask : ()-> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = { ListTopBar() },
         floatingActionButton = {
-            CustomFloatingActionButton()
+            CustomFloatingActionButton{onNavigateToNewTask()}
         },
 
     ) { innerPadding ->

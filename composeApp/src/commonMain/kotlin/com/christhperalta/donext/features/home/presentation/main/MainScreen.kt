@@ -135,7 +135,7 @@ fun MainScreen(
                         onNavigateToProfile = { tabBackStack.add(TabScreen.Profile) })
                 }
                 entry<TabScreen.List> {
-                    ListScreen()
+                    ListScreen( onNavigateToNewTask = onNavigateToNewTask,)
                 }
                 entry<TabScreen.Stats> {
                     StatsScreen()
