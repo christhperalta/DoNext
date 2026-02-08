@@ -12,10 +12,13 @@ import com.christhperalta.donext.features.home.presentation.main.BrandGreen
 
 @Composable
 fun CustomFloatingActionButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+
 ) {
     FloatingActionButton(
-        onClick = { /* TODO */ },
+        modifier = modifier,
+        onClick = onClick,
         containerColor = BrandGreen,
         contentColor = Color.White
     ) {
