@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -37,7 +36,7 @@ fun ListScreen( onNavigateToNewTask : ()-> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        topBar = { ListTopBar() },
+        topBar = { ListTopBar(onNavigateToNewTask) },
         floatingActionButton = {
             CustomFloatingActionButton{onNavigateToNewTask()}
         },
@@ -57,7 +56,7 @@ fun ListScreen( onNavigateToNewTask : ()-> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ListTopBar() {
+private fun ListTopBar(onNavigateToNewTask : ()-> Unit) {
     TopAppBar(
         title = {
             CustomText(
@@ -76,7 +75,7 @@ private fun ListTopBar() {
 
             CustomFilledIconButton(
                 color = Color(0xFFF1F5EE),
-                onClick = {}
+                onClick = {onNavigateToNewTask()}
             ){
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
