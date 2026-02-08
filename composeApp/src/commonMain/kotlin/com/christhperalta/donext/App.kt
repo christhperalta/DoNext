@@ -53,7 +53,7 @@ fun App() {
                         })
                 }
                 entry<Screen.NewTask> {
-                    NewTaskScreen()
+                    NewTaskScreen(onBack = { backStack.removeLast() })
                 }
             }
         )
