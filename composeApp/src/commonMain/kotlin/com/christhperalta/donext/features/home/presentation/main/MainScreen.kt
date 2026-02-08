@@ -1,21 +1,17 @@
 package com.christhperalta.donext.features.home.presentation.main
 
 
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -26,26 +22,55 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.christhperalta.donext.Screen
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.christhperalta.donext.features.home.presentation.home.HomeScreen
 import com.christhperalta.donext.features.home.presentation.list.ListScreen
 import com.christhperalta.donext.features.home.presentation.stats.StatsScreen
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 
+
+sealed interface TabScreen : NavKey {
+    @Serializable
+    data object Home : TabScreen
+
+    @Serializable
+    data object List : TabScreen
+
+    @Serializable
+    data object Stats : TabScreen
+
+    @Serializable
+    data object Profile : TabScreen
+
+}
+
+
+private val config = SavedStateConfiguration {
+    serializersModule = SerializersModule {
+        polymorphic(NavKey::class) {
+            subclass(TabScreen.Home::class, TabScreen.Home.serializer())
+            subclass(TabScreen.List::class, TabScreen.List.serializer())
+            subclass(TabScreen.Stats::class, TabScreen.Stats.serializer())
+            subclass(TabScreen.Profile::class, TabScreen.Profile.serializer())
+        }
+    }
+}
 
 enum class MainDestination(
-    val route: Screen,
+    val route: TabScreen,
     val label: String,
     val icon: ImageVector
 ) {
-    Today(Screen.Home, "Today", Icons.Default.CalendarToday),
-    List(Screen.List, "List", Icons.Default.FilterList),
-    Stats(Screen.Stats, "Stats", Icons.Default.Equalizer),
-    Profile(Screen.Profile, "Profile", Icons.Default.Person)
+    Today(TabScreen.Home, "Today", Icons.Default.CalendarToday),
+    List(TabScreen.List, "List", Icons.Default.FilterList),
+    Stats(TabScreen.Stats, "Stats", Icons.Default.Equalizer),
+    Profile(TabScreen.Profile, "Profile", Icons.Default.Person)
 }
 
 val BrandGreen = Color(0xFF60DF20)
@@ -54,10 +79,11 @@ val BackgroundGray = Color(0xFFF5F7F5)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    backStack: NavBackStack<NavKey>
+    onNavigateToNewTask: () -> Unit
 ) {
 
-    val currentKey = backStack.lastOrNull() ?: Screen.Home
+    val tabBackStack = rememberNavBackStack(config, TabScreen.Home)
+    val currentKey = tabBackStack.lastOrNull() ?: TabScreen.Home
 
 
     Scaffold(
@@ -70,8 +96,15 @@ fun MainScreen(
                     NavigationBarItem(
                         selected = currentKey == destination.route,
                         onClick = {
-                            backStack.clear()
-                            backStack.add(destination.route)
+//                            if (tabBackStack.isNotEmpty()) {
+//                                tabBackStack[0] = destination.route
+//                            } else {
+//                                tabBackStack.add(destination.route)
+//                            }
+                            if (currentKey != destination.route) {
+                                tabBackStack.clear()
+                                tabBackStack.add(destination.route)
+                            }
                         },
                         label = { Text(destination.label) },
                         icon = {
@@ -87,26 +120,33 @@ fun MainScreen(
     ) { innerPadding ->
 
         NavDisplay(
-            backStack = backStack,
+            backStack = tabBackStack,
             modifier = Modifier.padding(innerPadding),
-
-            entryProvider = entryProvider {
-                entry<Screen.Home> {
-                    HomeScreen()
+            onBack = {
+                // Si hay más de una pantalla (ej: [Home, Profile]), quita la de arriba
+                if (tabBackStack.size > 1) {
+                    tabBackStack.removeLast()
                 }
-                entry<Screen.List> {
+            },
+            entryProvider = entryProvider {
+                entry<TabScreen.Home> {
+                    HomeScreen(
+                        onNavigateToNewTask = onNavigateToNewTask,
+                        onNavigateToProfile = { tabBackStack.add(TabScreen.Profile) })
+                }
+                entry<TabScreen.List> {
                     ListScreen()
                 }
-                entry<Screen.Stats> {
+                entry<TabScreen.Stats> {
                     StatsScreen()
                 }
-                entry<Screen.Profile> {
+                entry<TabScreen.Profile> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(text = " Profile")
                     }
                 }
+
             }
         )
     }
 }
-

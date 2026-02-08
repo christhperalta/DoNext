@@ -1,48 +1,61 @@
 package com.christhperalta.donext
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import com.christhperalta.donext.features.home.presentation.create_todo.NewTaskScreen
 import com.christhperalta.donext.features.home.presentation.main.MainScreen
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
-
 sealed interface Screen : NavKey {
+    @Serializable
+   data object MainScreen : Screen
 
+    @Serializable
+   data object NewTask : Screen
 
-   @Serializable object Home : Screen
-    @Serializable object List : Screen
-    @Serializable object Stats : Screen
-    @Serializable object Profile : Screen
 }
 
-private  val config = SavedStateConfiguration {
+private val config = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
-            subclass(Screen.Home::class, Screen.Home.serializer())
-            subclass(Screen.List::class, Screen.List.serializer())
-            subclass(Screen.Stats::class, Screen.Stats.serializer())
-            subclass(Screen.Profile::class, Screen.Profile.serializer())
-
+            subclass(Screen.MainScreen::class, Screen.MainScreen.serializer())
+            subclass(Screen.NewTask::class,  Screen.NewTask.serializer())
         }
     }
 }
-
 
 
 @Composable
 @Preview
 fun App() {
 
-    val backStack = rememberNavBackStack(config , Screen.Home)
+    val backStack = rememberNavBackStack(config, Screen.MainScreen)
 
     MaterialTheme {
-        MainScreen(backStack)
+        NavDisplay(
+            backStack = backStack,
+            entryProvider = entryProvider {
+                entry<Screen.MainScreen> {
+                    MainScreen(
+
+                        onNavigateToNewTask = {
+                            backStack.add(Screen.NewTask)
+                        })
+                }
+                entry<Screen.NewTask> {
+                    NewTaskScreen()
+                }
+            }
+        )
     }
 }
