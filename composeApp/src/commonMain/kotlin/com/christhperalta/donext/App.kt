@@ -1,7 +1,12 @@
 package com.christhperalta.donext
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
@@ -52,7 +57,29 @@ fun App() {
                             backStack.add(Screen.NewTask)
                         })
                 }
-                entry<Screen.NewTask> {
+                entry<Screen.NewTask>(
+                    metadata = NavDisplay.transitionSpec {
+                        // Slide new content up, keeping the old content in place underneath
+                        slideInVertically(
+                            initialOffsetY = { it },
+                            animationSpec = tween(1000)
+                        ) togetherWith ExitTransition.KeepUntilTransitionsFinished
+                    } + NavDisplay.popTransitionSpec {
+                        // Slide old content down, revealing the new content in place underneath
+                        EnterTransition.None togetherWith
+                                slideOutVertically(
+                                    targetOffsetY = { it },
+                                    animationSpec = tween(1000)
+                                )
+                    } + NavDisplay.predictivePopTransitionSpec {
+                        // Slide old content down, revealing the new content in place underneath
+                        EnterTransition.None togetherWith
+                                slideOutVertically(
+                                    targetOffsetY = { it },
+                                    animationSpec = tween(1000)
+                                )
+                    }
+                ){
                     NewTaskScreen(onBack = { backStack.removeLast() })
                 }
             }

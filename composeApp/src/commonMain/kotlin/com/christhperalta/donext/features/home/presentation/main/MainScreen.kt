@@ -1,7 +1,9 @@
 package com.christhperalta.donext.features.home.presentation.main
 
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
@@ -18,7 +20,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -29,6 +30,7 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.christhperalta.donext.features.home.presentation.home.HomeScreen
 import com.christhperalta.donext.features.home.presentation.list.ListScreen
+import com.christhperalta.donext.features.home.presentation.profile.ProfileScreen
 import com.christhperalta.donext.features.home.presentation.stats.StatsScreen
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -96,11 +98,6 @@ fun MainScreen(
                     NavigationBarItem(
                         selected = currentKey == destination.route,
                         onClick = {
-//                            if (tabBackStack.isNotEmpty()) {
-//                                tabBackStack[0] = destination.route
-//                            } else {
-//                                tabBackStack.add(destination.route)
-//                            }
                             if (currentKey != destination.route) {
                                 tabBackStack.clear()
                                 tabBackStack.add(destination.route)
@@ -123,7 +120,6 @@ fun MainScreen(
             backStack = tabBackStack,
             modifier = Modifier.padding(innerPadding),
             onBack = {
-                // Si hay más de una pantalla (ej: [Home, Profile]), quita la de arriba
                 if (tabBackStack.size > 1) {
                     tabBackStack.removeLast()
                 }
@@ -135,18 +131,31 @@ fun MainScreen(
                         onNavigateToProfile = { tabBackStack.add(TabScreen.Profile) })
                 }
                 entry<TabScreen.List> {
-                    ListScreen( onNavigateToNewTask = onNavigateToNewTask,)
+                    ListScreen(onNavigateToNewTask = onNavigateToNewTask)
                 }
                 entry<TabScreen.Stats> {
                     StatsScreen()
                 }
                 entry<TabScreen.Profile> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = " Profile")
-                    }
+                    ProfileScreen()
                 }
 
-            }
+            },
+            transitionSpec = {
+                // Slide in from right when navigating forward
+                slideInHorizontally(initialOffsetX = { it }) togetherWith
+                        slideOutHorizontally(targetOffsetX = { -it })
+            },
+            popTransitionSpec = {
+                // Slide in from left when navigating back
+                slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                        slideOutHorizontally(targetOffsetX = { it })
+            },
+            predictivePopTransitionSpec = {
+                // Slide in from left when navigating back
+                slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                        slideOutHorizontally(targetOffsetX = { it })
+            },
         )
     }
 }
