@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.christhperalta.donext.core.presentation.CustomFilledIconButton
 import com.christhperalta.donext.core.presentation.CustomFloatingActionButton
 import com.example.clickpos.core.ui.CustomText
 
@@ -40,7 +41,6 @@ fun ListScreen( onNavigateToNewTask : ()-> Unit) {
         floatingActionButton = {
             CustomFloatingActionButton{onNavigateToNewTask()}
         },
-
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding).padding(horizontal = 16.dp)) {
             Spacer(modifier = Modifier.height(25.dp))
@@ -67,12 +67,17 @@ private fun ListTopBar() {
             )
         },
         actions = {
-            FilledIconButton(onClick = {}) {
-                Icon(Icons.Default.Search, contentDescription = "Settings")
-            }
-            FilledIconButton(onClick = {}) {
-                Icon(Icons.Default.Add, contentDescription = "Add Task")
-            }
+            CustomFilledIconButton(
+                icon = Icons.Default.Search,
+                contentDescription = "Search",
+                color = Color(0xFFF1F5EE)
+            ){}
+
+            CustomFilledIconButton(
+                icon = Icons.Default.Add,
+                contentDescription = "Add Task",
+                color = Color(0xFFF1F5EE)
+            ){}
         }
     )
 }
