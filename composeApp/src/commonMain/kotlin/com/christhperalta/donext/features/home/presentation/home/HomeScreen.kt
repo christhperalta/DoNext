@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.christhperalta.donext.core.presentation.CustomFloatingActionButton
 import com.christhperalta.donext.features.home.presentation.main.BrandGreen
 import donext.composeapp.generated.resources.Res
 import donext.composeapp.generated.resources.profile_img
@@ -56,6 +57,8 @@ data class FilterOption(
 )
 @Composable
 fun HomeScreen(
+    onNavigateToNewTask : ()->Unit,
+    onNavigateToProfile : ()->Unit
 ) {
 
     val filterOptions = remember {
@@ -74,15 +77,11 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
-            HomeTopBar(userName = "Christh")
+            HomeTopBar(userName = "Christh" ,onNavigateToProfile = onNavigateToProfile)
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* TODO */ },
-                containerColor = BrandGreen,
-                contentColor = Color.White
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Task")
+            CustomFloatingActionButton{
+                onNavigateToNewTask()
             }
         },
 
@@ -154,7 +153,7 @@ private fun FilterRow(options: List<FilterOption>) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeTopBar(userName: String) {
+private fun HomeTopBar(userName: String ,onNavigateToProfile : ()->Unit) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent // El Scaffold ya tiene el fondo
@@ -171,7 +170,7 @@ private fun HomeTopBar(userName: String) {
         },
         title = { Text(text = userName, fontWeight = FontWeight.Bold) },
         actions = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { (onNavigateToProfile()) }) {
                 Icon(Icons.Default.Settings, contentDescription = "Settings")
             }
         }
