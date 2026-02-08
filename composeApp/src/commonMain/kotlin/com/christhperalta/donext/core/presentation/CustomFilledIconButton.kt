@@ -16,10 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun CustomFilledIconButton(
     modifier: Modifier = Modifier,
-    icon : ImageVector,
-    contentDescription : String,
     color : Color ,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    content : @Composable () -> Unit
 ) {
     FilledIconButton(
         modifier = modifier,
@@ -28,7 +27,7 @@ fun CustomFilledIconButton(
         ),
         onClick = {onClick()}
     ) {
-        Icon(icon, contentDescription = contentDescription)
+        content()
     }
 }
 

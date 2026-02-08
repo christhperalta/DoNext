@@ -68,16 +68,18 @@ private fun ListTopBar() {
         },
         actions = {
             CustomFilledIconButton(
-                icon = Icons.Default.Search,
-                contentDescription = "Search",
-                color = Color(0xFFF1F5EE)
-            ){}
+                color = Color(0xFFF1F5EE),
+                onClick = {}
+            ){
+                Icon(Icons.Default.Search, contentDescription = "Search")
+            }
 
             CustomFilledIconButton(
-                icon = Icons.Default.Add,
-                contentDescription = "Add Task",
-                color = Color(0xFFF1F5EE)
-            ){}
+                color = Color(0xFFF1F5EE),
+                onClick = {}
+            ){
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
         }
     )
 }
