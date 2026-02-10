@@ -1,7 +1,6 @@
 package com.christhperalta.donext.features.home.presentation.profile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,19 +23,14 @@ import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.Brightness2
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults.borderStroke
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +39,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import donext.composeapp.generated.resources.Res
@@ -53,11 +46,10 @@ import donext.composeapp.generated.resources.profile_img
 import org.jetbrains.compose.resources.painterResource
 
 
-// Colores personalizados basados en tu imagen
-val BackgroundColor = Color(0xFFF8FAF9)
+
+
 val PrimaryGreen = Color(0xFF63E643)
 val TextGray = Color(0xFF7D8C83)
-val LogoutRed = Color(0xFFE57373)
 
 @Composable
 fun ProfileScreen() {
@@ -147,7 +139,7 @@ fun ProfileScreen() {
                         title = "Theme",
                         subtitle = "Currently: Light"
                     )
-                    MenuOption(icon = Icons.Default.Help, title = "Help Center")
+                    MenuOption(icon = Icons.AutoMirrored.Filled.Help, title = "Help Center")
                 }
             }
 

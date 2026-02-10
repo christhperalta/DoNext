@@ -16,7 +16,6 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.christhperalta.donext.features.home.presentation.create_todo.NewTaskScreen
 import com.christhperalta.donext.features.home.presentation.main.MainScreen
-
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic

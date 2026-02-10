@@ -192,10 +192,10 @@ fun StatCard(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier.aspectRatio(1.2f), // Mantiene una forma similar a la imagen
+        modifier = modifier.aspectRatio(1.2f),
         shape = RoundedCornerShape(24.dp),
-        color = Color.White, // Gris muy claro de fondo
-        border = BorderStroke(1.dp, Color(0xFFF0F0F0)) // Borde sutil
+        color = Color.White,
+        border = BorderStroke(1.dp, Color(0xFFF0F0F0))
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
@@ -206,7 +206,7 @@ fun StatCard(
                 style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF9BA5B4), // Color gris azulado del texto
+                    color = Color(0xFF9BA5B4),
                     letterSpacing = 1.sp
                 )
             )
@@ -226,7 +226,7 @@ fun StatCard(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = unit,
-                    modifier = Modifier.padding(bottom = 4.dp), // Alineación visual
+                    modifier = Modifier.padding(bottom = 4.dp),
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
@@ -255,13 +255,13 @@ fun TaskProgressCard(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icono con fondo circular verde suave
+
             Box(
                 modifier = Modifier.size(48.dp).background(Color(0xFFF1F5EE), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.Work, // O un icono de maletín personalizado
+                    imageVector = Icons.Default.Work,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
                     tint = Color(0xFF6A9153)
