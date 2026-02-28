@@ -1,14 +1,17 @@
 package com.christhperalta.donext.features.home.presentation.list
 
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -27,28 +30,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.christhperalta.donext.core.model.TaskCategory
 import com.christhperalta.donext.core.presentation.CustomFilledIconButton
 import com.christhperalta.donext.core.presentation.CustomFloatingActionButton
 import com.example.clickpos.core.ui.CustomText
+import androidx.compose.foundation.lazy.grid.items
 
 @Composable
-fun ListScreen( onNavigateToNewTask : ()-> Unit) {
+fun ListScreen(onNavigateToNewTask: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = { ListTopBar(onNavigateToNewTask) },
         floatingActionButton = {
-            CustomFloatingActionButton{onNavigateToNewTask()}
+            CustomFloatingActionButton { onNavigateToNewTask() }
         },
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).padding(horizontal = 16.dp)) {
-            Spacer(modifier = Modifier.height(25.dp))
-            CustomText(
-                text = "Organize your life with ease.",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            ListItem()
+
+        LazyVerticalGrid(
+            modifier = Modifier.padding(innerPadding).padding(horizontal = 16.dp),
+            columns = GridCells.Adaptive(minSize = 160.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+            item (
+                span = { GridItemSpan(maxLineSpan) }
+            ) {
+                CustomText(
+                    text = "Organize your life with ease.",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+            items(TaskCategory.entries) { category ->
+                ListItem(
+                    title = category.name,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
         }
     }
 }
@@ -56,7 +75,7 @@ fun ListScreen( onNavigateToNewTask : ()-> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ListTopBar(onNavigateToNewTask : ()-> Unit) {
+private fun ListTopBar(onNavigateToNewTask: () -> Unit) {
     TopAppBar(
         title = {
             CustomText(
@@ -69,14 +88,14 @@ private fun ListTopBar(onNavigateToNewTask : ()-> Unit) {
             CustomFilledIconButton(
                 color = Color(0xFFF1F5EE),
                 onClick = {}
-            ){
+            ) {
                 Icon(Icons.Default.Search, contentDescription = "Search")
             }
 
             CustomFilledIconButton(
                 color = Color(0xFFF1F5EE),
-                onClick = {onNavigateToNewTask()}
-            ){
+                onClick = { onNavigateToNewTask() }
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
@@ -86,7 +105,8 @@ private fun ListTopBar(onNavigateToNewTask : ()-> Unit) {
 
 @Composable
 fun ListItem(
-    modifier: Modifier = Modifier
+    title: String,
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
@@ -95,8 +115,8 @@ fun ListItem(
 
         Box(
             modifier = Modifier
-                .width(200.dp)
-                .height(200.dp)
+                .width(160.dp)
+                .height(160.dp)
                 .padding(25.dp)
         ) {
             Card(
@@ -118,8 +138,8 @@ fun ListItem(
 
             Column(modifier = Modifier.align(alignment = Alignment.BottomStart)) {
                 CustomText(
-                    text = "Personal",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 CustomText(text = "12 task", style = MaterialTheme.typography.labelLarge)
