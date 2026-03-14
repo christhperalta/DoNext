@@ -59,7 +59,7 @@ fun ListScreen(onNavigateToNewTask: () -> Unit) {
                 CustomText(
                     text = "Organize your life with ease.",
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(16.dp)
+
                 )
             }
             items(TaskCategory.entries) { category ->

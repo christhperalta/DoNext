@@ -5,6 +5,6 @@ import com.christhperalta.donext.core.model.TaskPriority
 
 data class NewTackState (
     val taskDescription: String = "",
-    val taskCategory: TaskCategory = TaskCategory.PERSONAL,
-    val taskPriority: TaskPriority = TaskPriority.LOW,
+//    val taskCategory: TaskCategory = TaskCategory.PERSONAL,
+//    val taskPriority: TaskPriority = TaskPriority.LOW,
 )

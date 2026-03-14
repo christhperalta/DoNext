@@ -53,6 +53,9 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.viewmodelNavigation3)
             implementation(libs.vico.compose)
             implementation(libs.vico.compose.m3)
+            implementation("io.insert-koin:koin-compose:4.2.0-RC1")
+            implementation("io.insert-koin:koin-compose-viewmodel:4.2.0-RC1")
+            implementation("io.insert-koin:koin-compose-viewmodel-navigation:4.2.0-RC1")
         }
         commonTest.dependencies {
             implementation(libs.kotlinx.serialization.json)

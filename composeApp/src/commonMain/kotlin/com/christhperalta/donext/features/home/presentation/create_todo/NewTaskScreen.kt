@@ -27,10 +27,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,12 +36,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.christhperalta.donext.core.presentation.CustomFilledIconButton
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun NewTaskScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    vm: NewTaskViewModel = koinViewModel()
 ) {
+
+    val uiState = vm.state.collectAsStateWithLifecycle()
+
+
+
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = { NewTaskTopBar(onBack = onBack) }
@@ -59,7 +64,9 @@ fun NewTaskScreen(
         ) {
 
             CustomInputScreen(
-                modifier = Modifier.align(Alignment.TopStart)
+                modifier = Modifier.align(Alignment.TopStart),
+                value = uiState.value.taskDescription,
+                onValueChange = { vm.onEvent(NewTaskEvents.OnDescriptionChange(it)) }
             )
 
 
@@ -97,7 +104,7 @@ fun NewTaskScreen(
             CustomFilledIconButton(
                 modifier = Modifier.size(80.dp).align(Alignment.BottomCenter),
                 color = Color(0xFF81C784),
-                onClick = {}
+                onClick = {vm.onEvent(NewTaskEvents.OnCreateTask)}
             ){
                 Icon(Icons.Default.Check, contentDescription = "Check", tint = Color.White)
             }
@@ -197,17 +204,18 @@ fun CategorySelector(
 
 @Composable
 fun CustomInputScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    value: String = "",
+    onValueChange: (String) -> Unit
 ) {
-    var text by remember { mutableStateOf("") }
 
     Box(
         modifier = modifier
             .padding(16.dp)
     ) {
         BasicTextField(
-            value = text,
-            onValueChange = { text = it },
+            value = value,
+            onValueChange = onValueChange,
             // Estilo del texto que escribes
             textStyle = TextStyle(
                 fontSize = 22.sp,
@@ -218,7 +226,7 @@ fun CustomInputScreen(
             cursorBrush = SolidColor(Color.Black),
             decorationBox = { innerTextField ->
                 Box {
-                    if (text.isEmpty()) {
+                    if (value.isEmpty()) {
                         Text(
                             text = "What would you like to accomplish?",
                             style = TextStyle(
