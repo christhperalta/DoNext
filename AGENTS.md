@@ -25,7 +25,7 @@ Kotlin Multiplatform + Compose Multiplatform todo app targeting **Android** and 
 ./gradlew :composeApp:check
 ```
 
-- AGP 9.1.0, Kotlin 2.3.10, Compose Multiplatform 1.10.2, JVM target 11
+- AGP 9.2.1, Kotlin 2.4.0, Compose Multiplatform 1.11.1, JVM target 11
 - Version catalog at `gradle/libs.versions.toml`
 - Gradle config cache and build cache enabled
 
@@ -34,15 +34,16 @@ Kotlin Multiplatform + Compose Multiplatform todo app targeting **Android** and 
 - **Single-activity** Android; iOS uses `ComposeUIViewController`
 - **Navigation**: JetBrains Navigation3 (`org.jetbrains.androidx.navigation3`)
 - **DI**: Koin (`koin-compose` 4.2.0-RC1, viewmodel navigation support)
-- **Charts**: Vico 3.0.3 (`compose` + `compose-m3`)
+- **Charts**: Vico 3.2.2 (`compose` + `compose-m3`)
 - **Icons**: Material Icons Extended
 - **Feature packaging**: `features/home/presentation/{home,list,stats,profile,create_todo,main}`
 - **State pattern**: sealed `Events` + data `State` + `ViewModel` (Koin-injected via `viewModel { }`)
 
 ## Known Bugs (fix before making changes)
 
-1. `StatsScreen.kt:44` and `ListScreen.kt:36` — import `com.example.clickpos.core.ui.CustomText` instead of the correct `com.christhperalta.donext.core.presentation.CustomText`
-2. `NewTackState.kt` — filename has typo (should be `NewTaskState.kt`)
+1. `CustomText.kt`, `CustomButton.kt`, `CustomTextField.kt` — declare `package com.example.clickpos.core.ui` instead of `com.christhperalta.donext.core.presentation`
+2. `StatsScreen.kt:43` and `ListScreen.kt:36` — import `com.example.clickpos.core.ui.CustomText` instead of `com.christhperalta.donext.core.presentation.CustomText`
+3. `NewTaskViewModel.kt:10-11` — references `NewTackState` (typo, should be `NewTaskState`)
 
 ## Testing
 
