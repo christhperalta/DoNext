@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.christhperalta.donext.core.model.TaskCategory
 import com.christhperalta.donext.core.presentation.CustomFilledIconButton
 import com.christhperalta.donext.core.presentation.CustomFloatingActionButton
-import com.example.clickpos.core.ui.CustomText
+import com.christhperalta.donext.core.presentation.CustomText
 import androidx.compose.foundation.lazy.grid.items
 
 @Composable

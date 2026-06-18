@@ -3,7 +3,7 @@ import com.christhperalta.donext.core.model.TaskCategory
 import com.christhperalta.donext.core.model.TaskPriority
 
 
-data class NewTackState (
+data class NewTaskState (
     val taskDescription: String = "",
 //    val taskCategory: TaskCategory = TaskCategory.PERSONAL,
 //    val taskPriority: TaskPriority = TaskPriority.LOW,

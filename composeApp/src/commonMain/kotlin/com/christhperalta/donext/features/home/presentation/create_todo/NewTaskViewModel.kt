@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.update
 
 class NewTaskViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(NewTackState())
-    val state : StateFlow<NewTackState> = _uiState
+    private val _uiState = MutableStateFlow(NewTaskState())
+    val state : StateFlow<NewTaskState> = _uiState
 
 
 
