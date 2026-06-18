@@ -1,0 +1,21 @@
+CREATE TABLE CategoryEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    iconName TEXT NOT NULL DEFAULT 'Work',
+    colorHex TEXT NOT NULL DEFAULT '#60DF20',
+    createdAt TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM CategoryEntity ORDER BY name ASC;
+
+insert:
+INSERT INTO CategoryEntity(name, iconName, colorHex, createdAt)
+VALUES (:name, :iconName, :colorHex, :createdAt);
+
+insertOrIgnore:
+INSERT OR IGNORE INTO CategoryEntity(name, iconName, colorHex, createdAt)
+VALUES (:name, :iconName, :colorHex, :createdAt);
+
+deleteById:
+DELETE FROM CategoryEntity WHERE id = :id;

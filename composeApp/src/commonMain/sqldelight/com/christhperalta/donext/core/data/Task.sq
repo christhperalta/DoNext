@@ -23,3 +23,6 @@ UPDATE TaskEntity SET isCompleted = :isCompleted WHERE id = :id;
 
 deleteById:
 DELETE FROM TaskEntity WHERE id = :id;
+
+countTasksByCategory:
+SELECT COUNT(*) FROM TaskEntity WHERE category = :categoryName;

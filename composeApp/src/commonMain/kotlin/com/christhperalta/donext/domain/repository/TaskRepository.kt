@@ -15,4 +15,5 @@ interface TaskRepository {
     )
     suspend fun updateCompleted(id: Long, isCompleted: Boolean)
     suspend fun deleteTask(id: Long)
+    suspend fun countTasksByCategory(categoryName: String): Long
 }

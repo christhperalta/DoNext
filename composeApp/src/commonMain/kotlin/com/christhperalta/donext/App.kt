@@ -15,12 +15,14 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.christhperalta.donext.di.appModule
+import com.christhperalta.donext.domain.repository.CategoryRepository
 import com.christhperalta.donext.features.home.presentation.create_todo.NewTaskScreen
 import com.christhperalta.donext.features.home.presentation.main.MainScreen
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.KoinApplication
+import org.koin.compose.koinInject
 import org.koin.dsl.koinConfiguration
 
 sealed interface Screen : NavKey {
@@ -52,6 +54,11 @@ fun App() {
     KoinApplication(
         configuration = koinConfiguration { modules(appModule) }
     ) {
+        val categoryRepository: CategoryRepository = koinInject()
+        LaunchedEffect(Unit) {
+            categoryRepository.seedDefaultCategories()
+        }
+
         MaterialTheme {
             NavDisplay(
                 backStack = backStack,

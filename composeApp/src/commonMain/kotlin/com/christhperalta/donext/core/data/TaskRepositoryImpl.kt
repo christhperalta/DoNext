@@ -43,4 +43,8 @@ class TaskRepositoryImpl(private val db: DoNextDatabase) : TaskRepository {
     override suspend fun deleteTask(id: Long) = withContext(Dispatchers.Default) {
         queries.deleteById(id)
     }
+
+    override suspend fun countTasksByCategory(categoryName: String): Long = withContext(Dispatchers.Default) {
+        queries.countTasksByCategory(categoryName).executeAsOne()
+    }
 }
