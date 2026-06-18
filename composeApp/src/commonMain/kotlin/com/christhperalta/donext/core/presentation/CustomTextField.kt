@@ -1,5 +1,5 @@
 
-package com.example.clickpos.core.ui
+package com.christhperalta.donext.core.presentation
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions

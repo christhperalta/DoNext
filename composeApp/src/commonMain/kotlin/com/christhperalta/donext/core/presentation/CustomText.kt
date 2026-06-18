@@ -1,4 +1,4 @@
-package com.example.clickpos.core.ui
+package com.christhperalta.donext.core.presentation
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
