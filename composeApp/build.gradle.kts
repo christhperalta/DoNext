@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -37,6 +38,10 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.sqldelight.android.driver)
+        }
+        iosMain.dependencies {
+            implementation(libs.sqldelight.native.driver)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -53,6 +58,8 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.viewmodelNavigation3)
             implementation(libs.vico.compose)
             implementation(libs.vico.compose.m3)
+            implementation(libs.sqldelight.coroutines)
+            implementation(libs.kotlinx.datetime)
             implementation("io.insert-koin:koin-compose:4.2.0-RC1")
             implementation("io.insert-koin:koin-compose-viewmodel:4.2.0-RC1")
             implementation("io.insert-koin:koin-compose-viewmodel-navigation:4.2.0-RC1")
@@ -66,6 +73,14 @@ kotlin {
     }
 }
 
+
+sqldelight {
+    databases {
+        create("DoNextDatabase") {
+            packageName.set("com.christhperalta.donext.core.data")
+        }
+    }
+}
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)

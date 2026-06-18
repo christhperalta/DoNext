@@ -1,0 +1,25 @@
+CREATE TABLE TaskEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    description TEXT NOT NULL,
+    category TEXT NOT NULL DEFAULT 'PERSONAL',
+    priority TEXT NOT NULL DEFAULT 'MEDIUM',
+    dueDate TEXT,
+    isCompleted INTEGER NOT NULL DEFAULT 0,
+    createdAt TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM TaskEntity ORDER BY createdAt DESC;
+
+selectById:
+SELECT * FROM TaskEntity WHERE id = :id;
+
+insert:
+INSERT INTO TaskEntity(description, category, priority, dueDate, isCompleted, createdAt)
+VALUES (:description, :category, :priority, :dueDate, :isCompleted, :createdAt);
+
+updateCompleted:
+UPDATE TaskEntity SET isCompleted = :isCompleted WHERE id = :id;
+
+deleteById:
+DELETE FROM TaskEntity WHERE id = :id;

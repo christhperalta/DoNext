@@ -34,10 +34,43 @@ Kotlin Multiplatform + Compose Multiplatform todo app targeting **Android** and 
 - **Single-activity** Android; iOS uses `ComposeUIViewController`
 - **Navigation**: JetBrains Navigation3 (`org.jetbrains.androidx.navigation3`)
 - **DI**: Koin (`koin-compose` 4.2.0-RC1, viewmodel navigation support)
+- **Persistence**: SQLDelight 2.0.2 (Android: `AndroidSqliteDriver`, iOS: `NativeSqliteDriver`)
 - **Charts**: Vico 3.2.2 (`compose` + `compose-m3`)
 - **Icons**: Material Icons Extended
 - **Feature packaging**: `features/home/presentation/{home,list,stats,profile,create_todo,main}`
+- **Layers**: `core/data` (SQLDelight schema + repos + DriverFactory expect/actual), `domain/repository` (interfaces), `di` (Koin modules per platform)
 - **State pattern**: sealed `Events` + data `State` + `ViewModel` (Koin-injected via `viewModel { }`)
+
+## SQLDelight
+
+- Schema at `composeApp/src/commonMain/sqldelight/com/christhperalta/donext/core/data/Task.sq`
+- Driver factory uses `expect`/`actual` pattern:
+  - **commonMain**: `expect fun createDriver(): SqlDriver`
+  - **androidMain**: uses `AndroidSqliteDriver`; requires `AndroidAppContext.context` to be set before composable tree
+  - **iosMain**: uses `NativeSqliteDriver`
+- Generated database: `DoNextDatabase` in `com.christhperalta.donext.core.data`
+- Registered in Koin via `platformModule` (expect/actual per platform)
+- `TaskRepositoryImpl` wraps generated queries; injected via `singleOf(::TaskRepositoryImpl) { bind<TaskRepository>() }`
+
+## DI with Koin
+
+Koin modules (defined in `di/AppModule.kt`):
+
+| Module | Provides | Scope |
+|---|---|---|
+| `platformModule` | `DoNextDatabase` (via `createDriver()`) | `expect`/`actual` per platform |
+| `dataModule` | `TaskRepositoryImpl` as `TaskRepository` | common |
+| `domainModule` | (empty — future use cases) | common |
+| `presentationModule` | `NewTaskViewModel` | common |
+
+All modules are combined into `appModule` and loaded via `KoinApplication` in `App.kt`.
+
+## Data layer
+
+- `createDriver()` (`expect`/`actual`) — platform-specific SQLDelight driver
+- `DoNextDatabase` — generated from `Task.sq`
+- `TaskRepository` (interface in `domain/repository`) — `getAllTasks()`, `insertTask()`, `updateCompleted()`, `deleteTask()`, `getTaskById()`
+- `TaskRepositoryImpl` (in `core/data`) — wraps `DoNextDatabaseQueries` with coroutines
 
 ## Known Bugs (fix before making changes)
 
@@ -54,5 +87,6 @@ Kotlin Multiplatform + Compose Multiplatform todo app targeting **Android** and 
 
 - Use `state: StateFlow<…>` + `onEvent(…)` pattern for ViewModels
 - Navigation3 polymorphic serialization requires registering all `NavKey` subclasses in `SavedStateConfiguration.serializersModule`
-- All shared UI lives in `commonMain`; platform-specific code only where unavoidable (iOS entrypoint)
+- All shared UI lives in `commonMain`; platform-specific code only where unavoidable (iOS entrypoint, SQLDelight drivers, platform Koin modules)
 - `BrandGreen = Color(0xFF60DF20)` and `BackgroundGray = Color(0xFFF5F7F5)` defined in `MainScreen.kt`
+- Data layer lives in `core/data/`; domain interfaces in `domain/repository/`; DI modules in `di/`
