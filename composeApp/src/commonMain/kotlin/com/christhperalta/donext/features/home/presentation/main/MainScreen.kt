@@ -83,6 +83,7 @@ val BackgroundGray = Color(0xFFF5F7F5)
 fun MainScreen(
     onNavigateToNewTask: () -> Unit,
     onNavigateToEditTask: (Long) -> Unit,
+    onNavigateToCategoryTasks: (String) -> Unit,
 ) {
 
     val tabBackStack = rememberNavBackStack(config, TabScreen.Home)
@@ -134,7 +135,10 @@ fun MainScreen(
                     )
                 }
                 entry<TabScreen.List> {
-                    ListScreen(onNavigateToNewTask = onNavigateToNewTask)
+                    ListScreen(
+                        onNavigateToNewTask = onNavigateToNewTask,
+                        onNavigateToCategoryTasks = onNavigateToCategoryTasks,
+                    )
                 }
                 entry<TabScreen.Stats> {
                     StatsScreen()
@@ -145,17 +149,14 @@ fun MainScreen(
 
             },
             transitionSpec = {
-                // Slide in from right when navigating forward
                 slideInHorizontally(initialOffsetX = { it }) togetherWith
                         slideOutHorizontally(targetOffsetX = { -it })
             },
             popTransitionSpec = {
-                // Slide in from left when navigating back
                 slideInHorizontally(initialOffsetX = { -it }) togetherWith
                         slideOutHorizontally(targetOffsetX = { it })
             },
             predictivePopTransitionSpec = {
-                // Slide in from left when navigating back
                 slideInHorizontally(initialOffsetX = { -it }) togetherWith
                         slideOutHorizontally(targetOffsetX = { it })
             },

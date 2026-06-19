@@ -1,5 +1,6 @@
 package com.christhperalta.donext.features.home.presentation.list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,7 +43,10 @@ import com.christhperalta.donext.features.home.presentation.create_category.Crea
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ListScreen(onNavigateToNewTask: () -> Unit) {
+fun ListScreen(
+    onNavigateToNewTask: () -> Unit,
+    onNavigateToCategoryTasks: (String) -> Unit,
+) {
     val viewModel = koinViewModel<ListViewModel>()
     val state by viewModel.state.collectAsState()
 
@@ -77,6 +81,7 @@ fun ListScreen(onNavigateToNewTask: () -> Unit) {
                     colorHex = categoryWithCount.category.colorHex,
                     title = categoryWithCount.category.name,
                     taskCount = categoryWithCount.taskCount,
+                    onClick = { onNavigateToCategoryTasks(categoryWithCount.category.name) },
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
@@ -123,10 +128,11 @@ fun ListItem(
     colorHex: String,
     title: String,
     taskCount: Long,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.clickable(onClick = onClick),
         shape = RoundedCornerShape(40.dp)
     ) {
         Box(

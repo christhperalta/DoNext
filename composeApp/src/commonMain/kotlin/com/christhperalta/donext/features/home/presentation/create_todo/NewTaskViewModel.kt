@@ -100,7 +100,11 @@ class NewTaskViewModel(
     fun deleteTask() {
         val taskId = _uiState.value.editingTaskId ?: return
         viewModelScope.launch {
-            taskRepository.deleteTask(taskId)
+            taskRepository.softDeleteTask(taskId)
         }
+    }
+
+    fun resetState() {
+        _uiState.update { NewTaskState(categories = it.categories) }
     }
 }

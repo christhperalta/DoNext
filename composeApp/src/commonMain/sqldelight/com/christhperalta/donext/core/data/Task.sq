@@ -1,28 +1,51 @@
 CREATE TABLE TaskEntity (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
     description TEXT NOT NULL,
     category TEXT NOT NULL DEFAULT 'PERSONAL',
     priority TEXT NOT NULL DEFAULT 'MEDIUM',
     dueDate TEXT,
     isCompleted INTEGER NOT NULL DEFAULT 0,
-    createdAt TEXT NOT NULL
+    createdAt TEXT NOT NULL,
+    isDeleted INTEGER NOT NULL DEFAULT 0,
+    deletedAt TEXT
 );
 
 selectAll:
-SELECT * FROM TaskEntity ORDER BY createdAt DESC;
+SELECT * FROM TaskEntity WHERE isDeleted = 0 ORDER BY createdAt DESC;
 
 selectById:
 SELECT * FROM TaskEntity WHERE id = :id;
 
 insert:
-INSERT INTO TaskEntity(description, category, priority, dueDate, isCompleted, createdAt)
-VALUES (:description, :category, :priority, :dueDate, :isCompleted, :createdAt);
+INSERT INTO TaskEntity(title, description, category, priority, dueDate, isCompleted, createdAt)
+VALUES (:title, :description, :category, :priority, :dueDate, :isCompleted, :createdAt);
 
 updateCompleted:
 UPDATE TaskEntity SET isCompleted = :isCompleted WHERE id = :id;
+
+updateTask:
+UPDATE TaskEntity SET title = :title, description = :description, category = :category,
+    priority = :priority, dueDate = :dueDate WHERE id = :id;
 
 deleteById:
 DELETE FROM TaskEntity WHERE id = :id;
 
 countTasksByCategory:
-SELECT COUNT(*) FROM TaskEntity WHERE category = :categoryName;
+SELECT COUNT(*) FROM TaskEntity WHERE category = :categoryName AND isDeleted = 0;
+
+selectByCategory:
+SELECT * FROM TaskEntity WHERE category = :categoryName AND isDeleted = 0 ORDER BY createdAt DESC;
+
+selectRestorableByCategory:
+SELECT * FROM TaskEntity WHERE category = :categoryName AND isDeleted = 1
+AND deletedAt > :cleanupThreshold ORDER BY deletedAt DESC;
+
+softDeleteById:
+UPDATE TaskEntity SET isDeleted = 1, deletedAt = :deletedAt WHERE id = :id;
+
+restoreById:
+UPDATE TaskEntity SET isDeleted = 0, deletedAt = NULL WHERE id = :id;
+
+permanentDeleteOld:
+DELETE FROM TaskEntity WHERE isDeleted = 1 AND deletedAt < :cleanupThreshold;

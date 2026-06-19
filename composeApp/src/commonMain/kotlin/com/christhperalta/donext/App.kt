@@ -17,6 +17,8 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.christhperalta.donext.core.data.Settings
 import com.christhperalta.donext.di.appModule
 import com.christhperalta.donext.domain.repository.CategoryRepository
+import com.christhperalta.donext.domain.repository.TaskRepository
+import com.christhperalta.donext.features.home.presentation.category_tasks.CategoryTasksScreen
 import com.christhperalta.donext.features.home.presentation.create_todo.NewTaskScreen
 import com.christhperalta.donext.features.home.presentation.main.MainScreen
 import com.christhperalta.donext.features.onboarding.OnboardingScreen
@@ -40,6 +42,9 @@ sealed interface Screen : NavKey {
     @Serializable
     data object NewTask : Screen
 
+    @Serializable
+    data class CategoryTasks(val categoryName: String) : Screen
+
 }
 
 private val config = SavedStateConfiguration {
@@ -49,6 +54,7 @@ private val config = SavedStateConfiguration {
             subclass(Screen.MainScreen::class, Screen.MainScreen.serializer())
             subclass(Screen.EditTask::class, Screen.EditTask.serializer())
             subclass(Screen.NewTask::class, Screen.NewTask.serializer())
+            subclass(Screen.CategoryTasks::class, Screen.CategoryTasks.serializer())
         }
     }
 }
@@ -62,12 +68,14 @@ fun App() {
     ) {
         val settings: Settings = koinInject()
         val categoryRepository: CategoryRepository = koinInject()
+        val taskRepository: TaskRepository = koinInject()
         val onboardingDone = remember { settings.getBoolean("onboarding_completed") }
         val initialScreen = if (onboardingDone) Screen.MainScreen else Screen.Onboarding
         val backStack = rememberNavBackStack(config, initialScreen)
 
         LaunchedEffect(Unit) {
             categoryRepository.seedDefaultCategories()
+            taskRepository.permanentDeleteOldTasks()
         }
 
         MaterialTheme {
@@ -90,6 +98,9 @@ fun App() {
                             },
                             onNavigateToEditTask = { taskId ->
                                 backStack.add(Screen.EditTask(taskId))
+                            },
+                            onNavigateToCategoryTasks = { categoryName ->
+                                backStack.add(Screen.CategoryTasks(categoryName))
                             },
                         )
                     }
@@ -116,6 +127,13 @@ fun App() {
                         val editTask = backStack.lastOrNull() as? Screen.EditTask
                         NewTaskScreen(
                             taskId = editTask?.taskId,
+                            onBack = { backStack.removeLast() },
+                        )
+                    }
+                    entry<Screen.CategoryTasks> {
+                        val catTask = backStack.lastOrNull() as? Screen.CategoryTasks
+                        CategoryTasksScreen(
+                            categoryName = catTask?.categoryName ?: "",
                             onBack = { backStack.removeLast() },
                         )
                     }
