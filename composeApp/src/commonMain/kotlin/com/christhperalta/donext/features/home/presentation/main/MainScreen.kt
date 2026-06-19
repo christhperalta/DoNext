@@ -81,7 +81,8 @@ val BackgroundGray = Color(0xFFF5F7F5)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    onNavigateToNewTask: () -> Unit
+    onNavigateToNewTask: () -> Unit,
+    onNavigateToEditTask: (Long) -> Unit,
 ) {
 
     val tabBackStack = rememberNavBackStack(config, TabScreen.Home)
@@ -128,7 +129,9 @@ fun MainScreen(
                 entry<TabScreen.Home> {
                     HomeScreen(
                         onNavigateToNewTask = onNavigateToNewTask,
-                        onNavigateToProfile = { tabBackStack.add(TabScreen.Profile) })
+                        onNavigateToProfile = { tabBackStack.add(TabScreen.Profile) },
+                        onNavigateToEditTask = onNavigateToEditTask,
+                    )
                 }
                 entry<TabScreen.List> {
                     ListScreen(onNavigateToNewTask = onNavigateToNewTask)

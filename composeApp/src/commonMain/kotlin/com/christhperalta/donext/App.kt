@@ -14,10 +14,12 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import com.christhperalta.donext.core.data.Settings
 import com.christhperalta.donext.di.appModule
 import com.christhperalta.donext.domain.repository.CategoryRepository
 import com.christhperalta.donext.features.home.presentation.create_todo.NewTaskScreen
 import com.christhperalta.donext.features.home.presentation.main.MainScreen
+import com.christhperalta.donext.features.onboarding.OnboardingScreen
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -27,7 +29,13 @@ import org.koin.dsl.koinConfiguration
 
 sealed interface Screen : NavKey {
     @Serializable
+    data object Onboarding : Screen
+
+    @Serializable
     data object MainScreen : Screen
+
+    @Serializable
+    data class EditTask(val taskId: Long) : Screen
 
     @Serializable
     data object NewTask : Screen
@@ -37,7 +45,9 @@ sealed interface Screen : NavKey {
 private val config = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
+            subclass(Screen.Onboarding::class, Screen.Onboarding.serializer())
             subclass(Screen.MainScreen::class, Screen.MainScreen.serializer())
+            subclass(Screen.EditTask::class, Screen.EditTask.serializer())
             subclass(Screen.NewTask::class, Screen.NewTask.serializer())
         }
     }
@@ -47,14 +57,15 @@ private val config = SavedStateConfiguration {
 @Composable
 @Preview
 fun App() {
-
-    val backStack = rememberNavBackStack(config, Screen.MainScreen)
-
-
     KoinApplication(
         configuration = koinConfiguration { modules(appModule) }
     ) {
+        val settings: Settings = koinInject()
         val categoryRepository: CategoryRepository = koinInject()
+        val onboardingDone = remember { settings.getBoolean("onboarding_completed") }
+        val initialScreen = if (onboardingDone) Screen.MainScreen else Screen.Onboarding
+        val backStack = rememberNavBackStack(config, initialScreen)
+
         LaunchedEffect(Unit) {
             categoryRepository.seedDefaultCategories()
         }
@@ -63,29 +74,64 @@ fun App() {
             NavDisplay(
                 backStack = backStack,
                 entryProvider = entryProvider {
+                    entry<Screen.Onboarding> {
+                        OnboardingScreen(
+                            settings = settings,
+                            onComplete = {
+                                backStack.clear()
+                                backStack.add(Screen.MainScreen)
+                            }
+                        )
+                    }
                     entry<Screen.MainScreen> {
                         MainScreen(
-
                             onNavigateToNewTask = {
                                 backStack.add(Screen.NewTask)
-                            })
+                            },
+                            onNavigateToEditTask = { taskId ->
+                                backStack.add(Screen.EditTask(taskId))
+                            },
+                        )
                     }
-                    entry<Screen.NewTask>(
+                    entry<Screen.EditTask>(
                         metadata = NavDisplay.transitionSpec {
-                            // Slide new content up, keeping the old content in place underneath
                             slideInVertically(
                                 initialOffsetY = { it },
                                 animationSpec = tween(1000)
                             ) togetherWith ExitTransition.KeepUntilTransitionsFinished
                         } + NavDisplay.popTransitionSpec {
-                            // Slide old content down, revealing the new content in place underneath
                             EnterTransition.None togetherWith
                                     slideOutVertically(
                                         targetOffsetY = { it },
                                         animationSpec = tween(1000)
                                     )
                         } + NavDisplay.predictivePopTransitionSpec {
-                            // Slide old content down, revealing the new content in place underneath
+                            EnterTransition.None togetherWith
+                                    slideOutVertically(
+                                        targetOffsetY = { it },
+                                        animationSpec = tween(1000)
+                                    )
+                        }
+                    ) {
+                        val editTask = backStack.lastOrNull() as? Screen.EditTask
+                        NewTaskScreen(
+                            taskId = editTask?.taskId,
+                            onBack = { backStack.removeLast() },
+                        )
+                    }
+                    entry<Screen.NewTask>(
+                        metadata = NavDisplay.transitionSpec {
+                            slideInVertically(
+                                initialOffsetY = { it },
+                                animationSpec = tween(1000)
+                            ) togetherWith ExitTransition.KeepUntilTransitionsFinished
+                        } + NavDisplay.popTransitionSpec {
+                            EnterTransition.None togetherWith
+                                    slideOutVertically(
+                                        targetOffsetY = { it },
+                                        animationSpec = tween(1000)
+                                    )
+                        } + NavDisplay.predictivePopTransitionSpec {
                             EnterTransition.None togetherWith
                                     slideOutVertically(
                                         targetOffsetY = { it },

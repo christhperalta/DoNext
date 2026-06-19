@@ -1,5 +1,6 @@
 package com.christhperalta.donext.features.home.presentation.profile
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,9 +43,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.christhperalta.donext.core.data.Settings
 import donext.composeapp.generated.resources.Res
 import donext.composeapp.generated.resources.profile_img
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 
 
 
@@ -53,6 +57,9 @@ val TextGray = Color(0xFF7D8C83)
 
 @Composable
 fun ProfileScreen() {
+    val settings: Settings = koinInject()
+    val userName = remember { settings.getString("user_name") }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -113,7 +120,7 @@ fun ProfileScreen() {
 
                 // --- INFORMACIÓN DE USUARIO ---
                 Text(
-                    text = "Alex",
+                    text = userName.ifBlank { "User" },
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
