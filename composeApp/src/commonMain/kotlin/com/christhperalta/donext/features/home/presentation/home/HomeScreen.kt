@@ -1,6 +1,5 @@
 package com.christhperalta.donext.features.home.presentation.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,18 +21,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,10 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.christhperalta.donext.core.presentation.CustomFloatingActionButton
-import com.christhperalta.donext.features.home.presentation.main.BrandGreen
-import donext.composeapp.generated.resources.Res
-import donext.composeapp.generated.resources.profile_img
-import org.jetbrains.compose.resources.painterResource
+import com.christhperalta.donext.core.presentation.CustomText
 import org.koin.compose.viewmodel.koinViewModel
 
 data class FilterOption(
@@ -60,7 +55,6 @@ data class FilterOption(
 @Composable
 fun HomeScreen(
     onNavigateToNewTask : ()->Unit,
-    onNavigateToProfile : ()->Unit,
     onNavigateToEditTask : (Long) -> Unit,
 ) {
     val vm = koinViewModel<HomeViewModel>()
@@ -77,7 +71,7 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
-            HomeTopBar(userName = state.userName ,onNavigateToProfile = onNavigateToProfile)
+            HomeTopBar(userName = "Home")
         },
         floatingActionButton = {
             CustomFloatingActionButton{
@@ -96,6 +90,17 @@ fun HomeScreen(
             item { HeaderSection(userName = state.userName, taskCount = state.todayTasks.size) }
 
             item { FilterRow(options = filterOptions, activeFilter = state.activeFilter, onFilterClick = vm::onFilterChanged) }
+
+            if (state.todayTasks.isEmpty()) {
+                item {
+                    Text(
+                        text = "No tasks for today.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(vertical = 16.dp),
+                    )
+                }
+            }
 
             items(state.todayTasks) { task ->
                 TaskCard(
@@ -123,7 +128,7 @@ private fun HeaderSection(userName: String, taskCount: Int) {
             text = "You have $taskCount task${if (taskCount != 1) "s" else ""} today.",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
-            color = BrandGreen
+            color = MaterialTheme.colorScheme.primary
         )
     }
 }
@@ -140,8 +145,8 @@ private fun FilterRow(
     ) {
         items(options, key = { it.id }) { option ->
             val isActive = option.type == activeFilter
-            val containerColor = if (isActive) BrandGreen else Color.White
-            val contentColor = if (isActive) Color.White else Color.Black
+            val containerColor = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+            val contentColor = if (isActive) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
 
             Button(
                 onClick = { onFilterClick(option.type) },
@@ -159,27 +164,18 @@ private fun FilterRow(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeTopBar(userName: String ,onNavigateToProfile : ()->Unit) {
-    CenterAlignedTopAppBar(
+private fun HomeTopBar(userName: String) {
+    TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent
         ),
-        navigationIcon = {
-            Image(
-                painter = painterResource(Res.drawable.profile_img),
-                contentDescription = "Profile",
-                modifier = Modifier
-                    .padding(start = 12.dp)
-                    .size(40.dp)
-                    .clip(CircleShape)
+        title = {
+            CustomText(
+                text = userName.ifBlank { "Home" },
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
             )
         },
-        title = { Text(text = userName.ifBlank { "Home" }, fontWeight = FontWeight.Bold) },
-        actions = {
-            IconButton(onClick = { (onNavigateToProfile()) }) {
-                Icon(Icons.Default.Settings, contentDescription = "Settings")
-            }
-        }
     )
 }
 
@@ -192,7 +188,7 @@ private fun TaskCard(
     onToggleCompleted: () -> Unit = {},
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
             .fillMaxWidth()
@@ -206,10 +202,10 @@ private fun TaskCard(
                 modifier = Modifier
                     .size(24.dp)
                     .clip(CircleShape)
-                    .background(if (isCompleted) BrandGreen else Color.Transparent)
+                    .background(if (isCompleted) MaterialTheme.colorScheme.primary else Color.Transparent)
                     .border(
                         width = if (isCompleted) 0.dp else 1.dp,
-                        color = Color.LightGray,
+                        color = MaterialTheme.colorScheme.outlineVariant,
                         shape = CircleShape,
                     )
                     .clickable(onClick = onToggleCompleted),
@@ -219,7 +215,7 @@ private fun TaskCard(
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = "Completed",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(16.dp),
                     )
                 }
@@ -233,12 +229,12 @@ private fun TaskCard(
                 Text(
                     text = title,
                     fontWeight = FontWeight.Bold,
-                    color = if (isCompleted) Color.Gray else Color.Black,
+                    color = if (isCompleted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 

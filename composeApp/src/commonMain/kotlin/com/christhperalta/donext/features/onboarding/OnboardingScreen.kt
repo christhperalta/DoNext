@@ -41,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -50,9 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.christhperalta.donext.core.data.Settings
 import kotlinx.coroutines.launch
-
-private val BrandGreen = Color(0xFF60DF20)
-private val BackgroundGray = Color(0xFFF5F7F5)
 
 @Composable
 fun OnboardingScreen(
@@ -66,7 +62,7 @@ fun OnboardingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundGray),
+            .background(MaterialTheme.colorScheme.background),
     ) {
         HorizontalPager(
             state = pagerState,
@@ -123,7 +119,7 @@ private fun WelcomeSlide() {
         Icon(
             imageVector = Icons.Default.CheckCircle,
             contentDescription = null,
-            tint = BrandGreen,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(120.dp),
         )
         Spacer(modifier = Modifier.height(32.dp))
@@ -131,14 +127,14 @@ private fun WelcomeSlide() {
             text = "Welcome to DoNext",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Your simple task manager.\nStay organized, get things done.",
             fontSize = 16.sp,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             lineHeight = 24.sp,
         )
@@ -157,7 +153,7 @@ private fun FeaturesSlide() {
             text = "What you can do",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(modifier = Modifier.height(32.dp))
         FeatureItem(
@@ -194,13 +190,13 @@ private fun FeatureItem(
             modifier = Modifier
                 .size(56.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(BrandGreen.copy(alpha = 0.15f)),
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = BrandGreen,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(28.dp),
             )
         }
@@ -210,12 +206,12 @@ private fun FeatureItem(
                 text = title,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = description,
                 fontSize = 14.sp,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -236,7 +232,7 @@ private fun NameSlide(
         Icon(
             imageVector = Icons.Default.EditNote,
             contentDescription = null,
-            tint = BrandGreen,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(80.dp),
         )
         Spacer(modifier = Modifier.height(24.dp))
@@ -244,14 +240,14 @@ private fun NameSlide(
             text = "What should we call you?",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Enter your name to personalize your experience.",
             fontSize = 14.sp,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(32.dp))
@@ -263,8 +259,8 @@ private fun NameSlide(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = BrandGreen,
-                cursorColor = BrandGreen,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary,
             ),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { onDone() }),
@@ -295,7 +291,7 @@ private fun BottomBar(
             repeat(pageCount) { index ->
                 val isSelected = index == currentPage
                 val color by animateColorAsState(
-                    targetValue = if (isSelected) BrandGreen else Color.LightGray,
+                    targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
                     label = "dot",
                 )
                 Box(
@@ -315,7 +311,7 @@ private fun BottomBar(
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = BrandGreen),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             ) {
                 Text(
                     text = "Get Started",
@@ -330,7 +326,7 @@ private fun BottomBar(
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = BrandGreen),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             ) {
                 Text(
                     text = "Next",
@@ -344,7 +340,7 @@ private fun BottomBar(
             TextButton(onClick = onSkip) {
                 Text(
                     text = "Skip",
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 16.sp,
                 )
             }

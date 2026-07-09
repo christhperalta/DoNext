@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
@@ -15,6 +14,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.christhperalta.donext.core.data.Settings
+import com.christhperalta.donext.core.presentation.theme.DoNextTheme
 import com.christhperalta.donext.di.appModule
 import com.christhperalta.donext.domain.repository.CategoryRepository
 import com.christhperalta.donext.domain.repository.TaskRepository
@@ -78,7 +78,7 @@ fun App() {
             taskRepository.permanentDeleteOldTasks()
         }
 
-        MaterialTheme {
+        DoNextTheme {
             NavDisplay(
                 backStack = backStack,
                 entryProvider = entryProvider {

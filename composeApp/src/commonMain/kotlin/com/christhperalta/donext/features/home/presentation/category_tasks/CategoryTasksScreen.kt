@@ -35,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,7 +48,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.christhperalta.donext.features.home.presentation.main.BrandGreen
+import com.christhperalta.donext.core.presentation.CustomText
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,9 +69,13 @@ fun CategoryTasksScreen(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                ),
                 title = {
-                    Text(
+                    CustomText(
                         text = state.categoryName.ifBlank { "Category" },
+                        style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
                     )
                 },
@@ -103,7 +108,7 @@ fun CategoryTasksScreen(
                     Text(
                         text = "No tasks in this category.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(vertical = 16.dp),
                     )
                 }
@@ -151,7 +156,7 @@ private fun TaskCard(
     onDelete: () -> Unit = {},
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -163,10 +168,10 @@ private fun TaskCard(
                 modifier = Modifier
                     .size(24.dp)
                     .clip(CircleShape)
-                    .background(if (isCompleted) BrandGreen else Color.Transparent)
+                    .background(if (isCompleted) MaterialTheme.colorScheme.primary else Color.Transparent)
                     .border(
                         width = if (isCompleted) 0.dp else 1.dp,
-                        color = Color.LightGray,
+                        color = MaterialTheme.colorScheme.outlineVariant,
                         shape = CircleShape,
                     )
                     .clickable(onClick = onToggleCompleted),
@@ -176,7 +181,7 @@ private fun TaskCard(
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = "Completed",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(16.dp),
                     )
                 }
@@ -190,14 +195,14 @@ private fun TaskCard(
                 Text(
                     text = title,
                     fontWeight = FontWeight.Bold,
-                    color = if (isCompleted) Color.Gray else Color.Black,
+                    color = if (isCompleted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -207,7 +212,7 @@ private fun TaskCard(
                 Icon(
                     Icons.Default.Delete,
                     contentDescription = "Delete",
-                    tint = Color(0xFFEF5350),
+                    tint = MaterialTheme.colorScheme.error,
                 )
             }
         }
@@ -222,7 +227,7 @@ private fun RestorableTaskCard(
     onRestore: () -> Unit,
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -236,7 +241,7 @@ private fun RestorableTaskCard(
                 Text(
                     text = title,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textDecoration = TextDecoration.LineThrough,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -244,7 +249,7 @@ private fun RestorableTaskCard(
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.LightGray,
+                    color = MaterialTheme.colorScheme.outlineVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -255,8 +260,8 @@ private fun RestorableTaskCard(
             Button(
                 onClick = onRestore,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = BrandGreen,
-                    contentColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
                 shape = RoundedCornerShape(12.dp),

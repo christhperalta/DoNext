@@ -12,16 +12,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -30,7 +29,6 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.christhperalta.donext.features.home.presentation.home.HomeScreen
 import com.christhperalta.donext.features.home.presentation.list.ListScreen
-import com.christhperalta.donext.features.home.presentation.profile.ProfileScreen
 import com.christhperalta.donext.features.home.presentation.stats.StatsScreen
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
@@ -47,9 +45,6 @@ sealed interface TabScreen : NavKey {
     @Serializable
     data object Stats : TabScreen
 
-    @Serializable
-    data object Profile : TabScreen
-
 }
 
 
@@ -59,7 +54,6 @@ private val config = SavedStateConfiguration {
             subclass(TabScreen.Home::class, TabScreen.Home.serializer())
             subclass(TabScreen.List::class, TabScreen.List.serializer())
             subclass(TabScreen.Stats::class, TabScreen.Stats.serializer())
-            subclass(TabScreen.Profile::class, TabScreen.Profile.serializer())
         }
     }
 }
@@ -71,12 +65,8 @@ enum class MainDestination(
 ) {
     Today(TabScreen.Home, "Today", Icons.Default.CalendarToday),
     List(TabScreen.List, "List", Icons.Default.FilterList),
-    Stats(TabScreen.Stats, "Stats", Icons.Default.Equalizer),
-    Profile(TabScreen.Profile, "Profile", Icons.Default.Person)
+    Stats(TabScreen.Stats, "Stats", Icons.Default.Equalizer)
 }
-
-val BrandGreen = Color(0xFF60DF20)
-val BackgroundGray = Color(0xFFF5F7F5)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,10 +82,10 @@ fun MainScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = BackgroundGray,
+        containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets.navigationBars,
         bottomBar = {
-            NavigationBar(containerColor = Color.White) {
+            NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
                 MainDestination.entries.forEach { destination ->
                     NavigationBarItem(
                         selected = currentKey == destination.route,
@@ -130,7 +120,6 @@ fun MainScreen(
                 entry<TabScreen.Home> {
                     HomeScreen(
                         onNavigateToNewTask = onNavigateToNewTask,
-                        onNavigateToProfile = { tabBackStack.add(TabScreen.Profile) },
                         onNavigateToEditTask = onNavigateToEditTask,
                     )
                 }
@@ -142,9 +131,6 @@ fun MainScreen(
                 }
                 entry<TabScreen.Stats> {
                     StatsScreen()
-                }
-                entry<TabScreen.Profile> {
-                    ProfileScreen()
                 }
 
             },

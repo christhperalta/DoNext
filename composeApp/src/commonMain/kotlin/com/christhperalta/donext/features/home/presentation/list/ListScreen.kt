@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -62,7 +63,7 @@ fun ListScreen(
     ) { innerPadding ->
 
         LazyVerticalGrid(
-            modifier = Modifier.padding(innerPadding).padding(horizontal = 16.dp),
+            modifier = Modifier.padding(innerPadding).padding(horizontal = 16.dp).padding(top = 32.dp),
             columns = GridCells.Adaptive(minSize = 160.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -97,6 +98,9 @@ fun ListScreen(
 @Composable
 private fun ListTopBar(onNavigateToNewTask: () -> Unit) {
     TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent
+        ),
         title = {
             CustomText(
                 text = "Your List",
@@ -106,14 +110,14 @@ private fun ListTopBar(onNavigateToNewTask: () -> Unit) {
         },
         actions = {
             CustomFilledIconButton(
-                color = Color(0xFFF1F5EE),
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 onClick = {}
             ) {
                 Icon(Icons.Default.Search, contentDescription = "Search")
             }
 
             CustomFilledIconButton(
-                color = Color(0xFFF1F5EE),
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 onClick = { onNavigateToNewTask() }
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add")

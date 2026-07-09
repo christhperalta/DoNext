@@ -4,10 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import com.christhperalta.donext.features.home.presentation.main.BrandGreen
 
 
 @Composable
@@ -19,8 +18,8 @@ fun CustomFloatingActionButton(
     FloatingActionButton(
         modifier = modifier,
         onClick = onClick,
-        containerColor = BrandGreen,
-        contentColor = Color.White
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary
     ) {
         Icon(Icons.Default.Add, contentDescription = "Add Task")
     }

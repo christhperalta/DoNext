@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Work
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -29,6 +28,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -98,7 +99,7 @@ fun StatsScreen() {
                         title = "WEEKLY\nCOMPLETION",
                         value = "84",
                         unit = "%",
-                        valueColor = Color(0xFF60DF20) // Un verde similar al de la imagen
+                        valueColor = MaterialTheme.colorScheme.primary
                     )
 
                     // Tarjeta de Longest Streak
@@ -107,7 +108,7 @@ fun StatsScreen() {
                         title = "LONGEST STREAK",
                         value = "12",
                         unit = "days",
-                        valueColor = Color.Black
+                        valueColor = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -127,7 +128,7 @@ fun StatsScreen() {
                         modifier = Modifier.padding(start = 16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(Color(0xFF6A9153)))
+                        Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(MaterialTheme.colorScheme.secondary))
                         Spacer(modifier = Modifier.width(5.dp))
                         CustomText(
                             text = "Task completed",
@@ -176,9 +177,18 @@ fun StatsScreen() {
 fun StatsTopBar(
     modifier: Modifier = Modifier
 ) {
-    CenterAlignedTopAppBar(
+    TopAppBar(
         modifier = modifier,
-        title = { Text(text = "Activity", fontWeight = FontWeight.Bold) },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent
+        ),
+        title = {
+            CustomText(
+                text = "Activity",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
+            )
+        },
     )
 }
 
@@ -194,8 +204,8 @@ fun StatCard(
     Surface(
         modifier = modifier.aspectRatio(1.2f),
         shape = RoundedCornerShape(24.dp),
-        color = Color.White,
-        border = BorderStroke(1.dp, Color(0xFFF0F0F0))
+        color = MaterialTheme.colorScheme.surface,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
@@ -206,7 +216,7 @@ fun StatCard(
                 style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF9BA5B4),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     letterSpacing = 1.sp
                 )
             )
@@ -230,7 +240,7 @@ fun StatCard(
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color(0xFF9BA5B4)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }
@@ -249,7 +259,7 @@ fun TaskProgressCard(
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -257,14 +267,14 @@ fun TaskProgressCard(
         ) {
 
             Box(
-                modifier = Modifier.size(48.dp).background(Color(0xFFF1F5EE), CircleShape),
+                modifier = Modifier.size(48.dp).background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Work,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
-                    tint = Color(0xFF6A9153)
+                    tint = MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -276,7 +286,7 @@ fun TaskProgressCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                    Text("$taskCount tasks", color = Color(0xFF9BA5B4), fontSize = 14.sp)
+                    Text("$taskCount tasks", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -285,8 +295,8 @@ fun TaskProgressCard(
                 LinearProgressIndicator(
                     progress = { progress },
                     modifier = Modifier.fillMaxWidth().height(8.dp).clip(CircleShape),
-                    color = Color(0xFF6A9153),
-                    trackColor = Color(0xFFF0F0F0)
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.outlineVariant
                 )
             }
         }

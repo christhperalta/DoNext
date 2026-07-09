@@ -1,7 +1,6 @@
 package com.christhperalta.donext.features.home.presentation.profile
 
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,17 +20,20 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Help
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Brightness2
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,21 +41,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.christhperalta.donext.core.data.Settings
-import donext.composeapp.generated.resources.Res
-import donext.composeapp.generated.resources.profile_img
-import org.jetbrains.compose.resources.painterResource
+import com.christhperalta.donext.core.presentation.CustomText
 import org.koin.compose.koinInject
 
 
 
 
-val PrimaryGreen = Color(0xFF63E643)
-val TextGray = Color(0xFF7D8C83)
 
 @Composable
 fun ProfileScreen() {
@@ -82,30 +79,29 @@ fun ProfileScreen() {
                     Box(
                         modifier = Modifier
                             .size(150.dp)
-                            .border(3.dp, Color(0xFFE8F5E9), CircleShape)
+                            .border(3.dp, MaterialTheme.colorScheme.primaryContainer, CircleShape)
                             .padding(8.dp)
                     ) {
-                        // Reemplaza 'R.drawable.profile_pic' con tu recurso de imagen
-                        Image(
-                            painter = painterResource(Res.drawable.profile_img),
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
                             contentDescription = "Profile Picture",
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clip(CircleShape),
-                            contentScale = ContentScale.Crop
                         )
                     }
                     // Botón de editar (Círculo verde)
                     Surface(
                         shape = CircleShape,
-                        color = PrimaryGreen,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(36.dp).offset(x = (-8).dp, y = (-8).dp),
                         shadowElevation = 2.dp
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = null,
-                            tint = Color.White,
+                            tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.padding(8.dp)
                         )
                     }
@@ -123,12 +119,12 @@ fun ProfileScreen() {
                     text = userName.ifBlank { "User" },
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = "Free Plan • User since 2023",
                     fontSize = 14.sp,
-                    color = PrimaryGreen,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Medium
                 )
 
@@ -179,9 +175,18 @@ fun ProfileScreen() {
 private fun ProfileTopBar(
     modifier: Modifier = Modifier
 ) {
-    CenterAlignedTopAppBar(
+    TopAppBar(
         modifier = modifier,
-        title = { Text(text = "Profile", fontWeight = FontWeight.Bold) }
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent
+        ),
+        title = {
+            CustomText(
+                text = "Profile",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
+            )
+        },
     )
 }
 
@@ -197,7 +202,7 @@ fun MenuOption(icon: ImageVector, title: String, subtitle: String? = null) {
         // Icono cuadrado con fondo blanco
         Surface(
             shape = RoundedCornerShape(12.dp),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surface,
             modifier = Modifier.size(48.dp),
             shadowElevation = 1.dp
         ) {
@@ -205,7 +210,7 @@ fun MenuOption(icon: ImageVector, title: String, subtitle: String? = null) {
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.padding(12.dp),
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
 
@@ -215,7 +220,7 @@ fun MenuOption(icon: ImageVector, title: String, subtitle: String? = null) {
         Column(modifier = Modifier.weight(1f)) {
             Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             if (subtitle != null) {
-                Text(text = subtitle, fontSize = 12.sp, color = TextGray)
+                Text(text = subtitle, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
 
@@ -223,7 +228,7 @@ fun MenuOption(icon: ImageVector, title: String, subtitle: String? = null) {
         Icon(
             imageVector = Icons.Default.ChevronRight,
             contentDescription = null,
-            tint = Color.LightGray
+            tint = MaterialTheme.colorScheme.outlineVariant
         )
     }
 }

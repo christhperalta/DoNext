@@ -84,8 +84,8 @@ fun CreateCategoryDialog(
             ) {
                 CategoryDefaults.iconOptions.forEach { option ->
                     val isSelected = state.selectedIcon == option.key
-                    val bgColor = if (isSelected) CategoryDefaults.parseColor(state.selectedColor) else Color(0xFFF1F5EE)
-                    val iconColor = if (isSelected) Color.White else Color.Black
+                    val bgColor = if (isSelected) CategoryDefaults.parseColor(state.selectedColor) else MaterialTheme.colorScheme.surfaceVariant
+                    val iconColor = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
 
                     Box(
                         modifier = Modifier
@@ -94,7 +94,7 @@ fun CreateCategoryDialog(
                             .background(bgColor)
                             .then(
                                 if (isSelected) Modifier.border(2.dp, bgColor, CircleShape)
-                                else Modifier.border(1.dp, Color(0xFFE0E0E0), CircleShape)
+                                else Modifier.border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
                             )
                             .clickable { vm.onEvent(CreateCategoryEvents.OnIconChange(option.key)) },
                         contentAlignment = Alignment.Center,
@@ -124,8 +124,8 @@ fun CreateCategoryDialog(
                             .clip(CircleShape)
                             .background(color)
                             .then(
-                                if (isSelected) Modifier.border(3.dp, Color.White, CircleShape)
-                                else Modifier.border(1.dp, Color(0xFFE0E0E0), CircleShape)
+                                if (isSelected) Modifier.border(3.dp, MaterialTheme.colorScheme.surface, CircleShape)
+                                else Modifier.border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
                             )
                             .clickable { vm.onEvent(CreateCategoryEvents.OnColorChange(hex)) },
                         contentAlignment = Alignment.Center,

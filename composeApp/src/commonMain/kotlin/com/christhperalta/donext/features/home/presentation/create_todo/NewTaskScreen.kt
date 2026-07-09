@@ -35,10 +35,12 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,6 +55,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -60,6 +63,10 @@ import com.christhperalta.donext.core.data.CategoryEntity
 import com.christhperalta.donext.core.model.TaskPriority
 import com.christhperalta.donext.core.presentation.CategoryDefaults
 import com.christhperalta.donext.core.presentation.CustomFilledIconButton
+import com.christhperalta.donext.core.presentation.CustomText
+import com.christhperalta.donext.core.presentation.theme.PriorityHigh
+import com.christhperalta.donext.core.presentation.theme.PriorityLow
+import com.christhperalta.donext.core.presentation.theme.PriorityMedium
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -101,20 +108,25 @@ fun NewTaskScreen(
         ) {
 
            Column (
-               modifier = Modifier.align(Alignment.TopStart)
+               modifier = Modifier.align(Alignment.TopStart).padding(top = 32.dp),
+               verticalArrangement = Arrangement.spacedBy(16.dp)
            ){
                CustomInputScreen(
-                    placeholder = "Title",
-                    value = uiState.taskTitle,
-                    onValueChange = { vm.onEvent(NewTaskEvents.OnTitleChange(it)) }
-                )
+                     placeholder = "Title",
+                     value = uiState.taskTitle,
+                     onValueChange = { vm.onEvent(NewTaskEvents.OnTitleChange(it)) },
+                     fontSize = 22.sp,
+                     fontWeight = FontWeight.Bold
+                 )
 
 
                 CustomInputScreen(
-                    placeholder = "Note",
-                    value = uiState.taskDescription,
-                    onValueChange = { vm.onEvent(NewTaskEvents.OnDescriptionChange(it)) }
-                )
+                     placeholder = "Note",
+                     value = uiState.taskDescription,
+                     onValueChange = { vm.onEvent(NewTaskEvents.OnDescriptionChange(it)) },
+                     fontSize = 16.sp,
+                     fontWeight = FontWeight.Normal
+                 )
            }
 
             Column(
@@ -144,7 +156,7 @@ fun NewTaskScreen(
 
             CustomFilledIconButton(
                 modifier = Modifier.size(80.dp).align(Alignment.BottomCenter),
-                color = Color(0xFF81C784),
+                color = MaterialTheme.colorScheme.primary,
                 onClick = {
                     if (uiState.isEditMode) {
                         vm.onEvent(NewTaskEvents.OnUpdateTask)
@@ -153,7 +165,7 @@ fun NewTaskScreen(
                     }
                 }
             ) {
-                Icon(Icons.Default.Check, contentDescription = "Check", tint = Color.White)
+                Icon(Icons.Default.Check, contentDescription = "Check", tint = MaterialTheme.colorScheme.onPrimary)
             }
         }
     }
@@ -169,7 +181,7 @@ fun NewTaskScreen(
                     showDeleteDialog = false
                     onBack()
                 }) {
-                    Text("Delete", color = Color.Red)
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
@@ -191,24 +203,28 @@ fun NewTaskTopBar(
 ) {
     TopAppBar(
         modifier = modifier,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent
+        ),
         title = {
-            Text(
+            CustomText(
                 text = if (isEditMode) "Edit Task" else "New Task",
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
             )
         },
         actions = {
             if (isEditMode) {
                 CustomFilledIconButton(
-                    color = Color(0xFFFEE2E2),
+                    color = MaterialTheme.colorScheme.errorContainer,
                     onClick = onDelete,
                 ) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.Red)
+                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
             }
             CustomFilledIconButton(
-                color = Color(0xFFF1F5EE),
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 onClick = { onBack() }
             ) {
                 Icon(Icons.Default.Close, contentDescription = "Close")
@@ -225,8 +241,8 @@ fun CategorySelector(
     categories: List<CategoryEntity>?,
     onCategorySelected: ((CategoryEntity) -> Unit)?,
 ) {
-    val iconGreen = Color(0xFF81C784)
-    val labelColor = Color(0xFF546E7A)
+    val iconGreen = MaterialTheme.colorScheme.primary
+    val labelColor = MaterialTheme.colorScheme.onSurfaceVariant
     var expanded by remember { mutableStateOf(false) }
 
     val hasDropdown = categories != null && onCategorySelected != null
@@ -250,7 +266,7 @@ fun CategorySelector(
                 .menuAnchor()
                 .clickable { if (hasDropdown) expanded = true },
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         ) {
             Row(
                 modifier = Modifier
@@ -277,7 +293,7 @@ fun CategorySelector(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = dropDownLabel,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -285,7 +301,7 @@ fun CategorySelector(
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowDown,
                         contentDescription = "Dropdown",
-                        tint = Color(0xFF90A4AE),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -345,8 +361,8 @@ fun DueDateSelector(
     selectedDate: String?,
     onDateSelected: (String?) -> Unit,
 ) {
-    val iconGreen = Color(0xFF81C784)
-    val labelColor = Color(0xFF546E7A)
+    val iconGreen = MaterialTheme.colorScheme.primary
+    val labelColor = MaterialTheme.colorScheme.onSurfaceVariant
     var showDialog by remember { mutableStateOf(false) }
 
     val displayText = if (selectedDate != null) {
@@ -363,7 +379,7 @@ fun DueDateSelector(
             .fillMaxWidth()
             .clickable { showDialog = true },
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Row(
             modifier = Modifier
@@ -388,18 +404,18 @@ fun DueDateSelector(
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = displayText,
-                    color = Color.Black,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                if (selectedDate != null) {
-                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "✕",
-                        color = Color(0xFF90A4AE),
+                        text = displayText,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    if (selectedDate != null) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "✕",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = 18.sp,
                         modifier = Modifier.clickable {
                             onDateSelected(null)
                         }
@@ -448,13 +464,13 @@ fun PrioritySelector(
     selectedPriority: TaskPriority,
     onPrioritySelected: (TaskPriority) -> Unit,
 ) {
-    val labelColor = Color(0xFF546E7A)
+    val labelColor = MaterialTheme.colorScheme.onSurfaceVariant
     var expanded by remember { mutableStateOf(false) }
 
     val (icon, iconTint) = when (selectedPriority) {
-        TaskPriority.LOW -> Icons.Default.ArrowDownward to Color(0xFF4CAF50)
-        TaskPriority.MEDIUM -> Icons.Default.Remove to Color(0xFFFF9800)
-        TaskPriority.HIGH -> Icons.Default.ArrowUpward to Color(0xFFF44336)
+        TaskPriority.LOW -> Icons.Default.ArrowDownward to PriorityLow
+        TaskPriority.MEDIUM -> Icons.Default.Remove to PriorityMedium
+        TaskPriority.HIGH -> Icons.Default.ArrowUpward to PriorityHigh
     }
 
     ExposedDropdownMenuBox(
@@ -467,7 +483,7 @@ fun PrioritySelector(
                 .menuAnchor()
                 .clickable { expanded = true },
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         ) {
             Row(
                 modifier = Modifier
@@ -494,7 +510,7 @@ fun PrioritySelector(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = selectedPriority.name,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -502,7 +518,7 @@ fun PrioritySelector(
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowDown,
                         contentDescription = "Dropdown",
-                        tint = Color(0xFF90A4AE),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -515,9 +531,9 @@ fun PrioritySelector(
         ) {
             TaskPriority.entries.forEach { priority ->
                 val (itemIcon, itemTint) = when (priority) {
-                    TaskPriority.LOW -> Icons.Default.ArrowDownward to Color(0xFF4CAF50)
-                    TaskPriority.MEDIUM -> Icons.Default.Remove to Color(0xFFFF9800)
-                    TaskPriority.HIGH -> Icons.Default.ArrowUpward to Color(0xFFF44336)
+                    TaskPriority.LOW -> Icons.Default.ArrowDownward to PriorityLow
+                    TaskPriority.MEDIUM -> Icons.Default.Remove to PriorityMedium
+                    TaskPriority.HIGH -> Icons.Default.ArrowUpward to PriorityHigh
                 }
                 DropdownMenuItem(
                     text = {
@@ -547,31 +563,32 @@ fun CustomInputScreen(
     placeholder: String = "",
     modifier: Modifier = Modifier,
     value: String = "",
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    fontSize: TextUnit = 18.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
 ) {
 
     Box(
         modifier = modifier
-            .padding(16.dp)
     ) {
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
             textStyle = TextStyle(
-                fontSize = 22.sp,
-                color = Color(0xFF1A1C1A),
-                fontWeight = FontWeight.Medium
+                fontSize = fontSize,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = fontWeight
             ),
-            cursorBrush = SolidColor(Color.Black),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
             decorationBox = { innerTextField ->
                 Box {
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
                             style = TextStyle(
-                                fontSize = 22.sp,
-                                color = Color(0xFFC5C9C5),
-                                fontWeight = FontWeight.Normal
+                                fontSize = fontSize,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = fontWeight
                             )
                         )
                     }
